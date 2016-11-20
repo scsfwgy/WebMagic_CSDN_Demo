@@ -31,5 +31,9 @@
 	<classpathentry kind="lib" path="lib/webmagic-core-0.5.2.jar" sourcepath="C:/Users/Administrator/Desktop/开发/webmagic/源码/webmagic-master"/>
 	<classpathentry kind="lib" path="lib/webmagic-extension-0.5.2.jar"/>
 	<classpathentry kind="lib" path="lib/xsoup-0.2.4.jar"/>
+	<classpathentry kind="lib" path="lib/selenium-java-2.44.0-srcs.jar"/>
+	<classpathentry kind="lib" path="lib/selenium-java-2.44.0.jar"/>
+	<classpathentry kind="lib" path="lib/selenium-server-standalone-2.44.0.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
