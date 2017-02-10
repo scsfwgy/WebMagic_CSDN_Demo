@@ -88,6 +88,12 @@ public class SimulateLoginPolicy1 {
 		Document doc = Jsoup.parse(html);
 		// 获取表单所在的节点
 		Element form = doc.select(".user-pass").get(0);
+
+		// 这里处理验证码
+		String yanzhengmaImg = form.getElementsByClass("code-img")
+				.toString();
+		System.out.println(yanzhengmaImg + "---");
+
 		// 以下三个是服务器给的标记信息，必须具有该信息登录才有效。
 		String lt = form.select("input[name=lt]").get(0).val();
 		String execution = form.select("input[name=execution]").get(0).val();
@@ -96,7 +102,7 @@ public class SimulateLoginPolicy1 {
 		// 开始构造登录的信息：账号、密码、以及三个标记信息
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		nvps.add(new BasicNameValuePair("username", "wgyscsf@163.com"));
-		nvps.add(new BasicNameValuePair("password", "wanggaoyuan"));
+		nvps.add(new BasicNameValuePair("password", "wan132"));
 		nvps.add(new BasicNameValuePair("lt", lt));
 		nvps.add(new BasicNameValuePair("execution", execution));
 		nvps.add(new BasicNameValuePair("_eventId", _eventId));
