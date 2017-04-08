@@ -1,5 +1,5 @@
-##WebMagic_CSDN_Demo##
-###简介
+## WebMagic_CSDN_Demo
+### 简介
 * 该项目是使用webMagic进行爬取CSDN各种信息的一个demo集合。
 * 爬虫各种疑难点的解决方案尝试。
 * 项目当前只包含爬虫核心代码（可以运行），不包含持久层与定时任务的处理。
@@ -7,7 +7,7 @@
 * 注释比较完善，适合webMaigc入门者学习。
 * 更多原理介绍以及实现思路请参看我的博客：[http://blog.csdn.net/wgyscsf](http://blog.csdn.net/wgyscsf "http://blog.csdn.net/wgyscsf")
 
-###功能列表
+### 功能列表
 * 博主信息爬取
 * 个人中心信息爬取
 * 博客列表分页爬取
