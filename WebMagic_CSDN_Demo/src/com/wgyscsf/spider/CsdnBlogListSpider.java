@@ -42,17 +42,13 @@ public class CsdnBlogListSpider extends BaseSpider {
 			id_author = id_author != null ? id_author : "获取作者id失败";
 			// System.out.println(TAG + author);
 			// 获取列表最外层节点的所有子节点。经过分析可以知道子节点有3个，“置顶文章”列表和“普通文章列表”和分页div。
-			List<String> out_div = page.getHtml()
-					.xpath("//div[@class=\"list_item_new\"]/div").all();
+			Selectable out_div = page.getHtml()
+					.xpath("//div[@class=\"list_item_new\"]/div");
 
-			// 判断是否存在置顶文章：如何div的个数为3说明存在置顶文章，否则不存在置顶文章。
-			if (out_div.size() == 3) {
+			// 判断是否存在文章：如何div的个数大于0说明存在文章，即可进入文章爬取，否则为页面错误。
+			if (out_div.nodes().size() > 0) {
 				// 存在
-				processTopArticle(out_div.get(0), id_author);
-				processCommArticle(out_div.get(1), id_author);
-			} else if (out_div.size() == 2) {
-				// 不存在
-				processCommArticle(out_div.get(0), id_author);
+				processCommArticle(out_div, id_author);
 			} else {
 				System.err.println(TAG + ":逻辑出错");
 			}
@@ -65,12 +61,18 @@ public class CsdnBlogListSpider extends BaseSpider {
 	}
 
 	/**
-	 * 处理普通文章列表
+	 * 处理所有文章列表
 	 */
-	private void processCommArticle(String str, String id_author) {
+	private void processCommArticle(Selectable selectable, String id_author) {
 		// 从列表页获取列表信息
-		List<String> all;
-		all = new Html(str).xpath("//div[@id=\"article_list\"]/div").all();
+		List<String> all, toplist;
+		//获取普通文章列表
+		all = selectable.xpath("//div[@id=\"article_list\"]/div").all();
+		//获取置顶文章列表
+		toplist = selectable.xpath("//div[@id=\"article_toplist\"]/div").all();
+		//整合所有文章列表
+		all.addAll(toplist);
+		
 		if (!all.isEmpty())
 			for (String string : all) {
 				// 这里开始获取具体内容
@@ -115,58 +117,6 @@ public class CsdnBlogListSpider extends BaseSpider {
 
 			}
 
-	}
-
-	/**
-	 * 处理置顶文章列表
-	 */
-	private void processTopArticle(String topListDiv, String id_author) {
-		// 从列表页获取列表信息
-		List<String> all;
-		all = new Html(topListDiv).xpath("//div[@id=\"article_toplist\"]/div")
-				.all();
-		if (!all.isEmpty())
-			for (String string : all) {
-				// 单项第一部分：article_title
-				// 文章地址
-				String detailsUrl = new Html(string)
-						.xpath("//div[@class='article_title']//span[@class='link_title']//a/@href")
-						.toString();
-				// 文章id
-				String id_blog = MyStringUtils.getLastSlantContent(detailsUrl);
-				// 文章标头
-				String title = new Html(string)
-						.xpath("//div[@class='article_title']//span[@class='link_title']//a/text()")
-						.toString();
-				// 文章类型
-				String type = getArticleType(string);
-				// 单项第二部分：article_description
-				String summary = new Html(string).xpath(
-						"//div[@class='article_description']//text()")
-						.toString();
-				// 单项第三部分：article_manage
-				String publishDateTime = new Html(string)
-						.xpath("//div[@class='article_manage']//span[@class='link_postdate']//text()")
-						.toString();
-				// 阅读量
-				String viewNums = new Html(string)
-						.xpath("//div[@class='article_manage']//span[@class='link_view']//text()")
-						.toString();
-				viewNums = MyStringUtils.getStringPureNumber(viewNums);
-				// 评论数
-				String commentNums = new Html(string)
-						.xpath("//div[@class='article_manage']//span[@class='link_comments']//text()")
-						.toString();
-				commentNums = MyStringUtils.getStringPureNumber(commentNums);
-
-				// 开始组织数据
-				System.out.println(TAG + ":,文章id：" + id_blog + ",文章标头：" + title
-						+ ",文章类型('0':原创；'1'：转载；'2'：翻译):" + type + ",发表日期："
-						+ publishDateTime + ",阅读量:" + viewNums + ",评论数："
-						+ commentNums + ",文章地址：" + detailsUrl + ",文章摘要："
-						+ summary + "");
-
-			}
 	}
 
 	/**
